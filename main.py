@@ -1,14 +1,6 @@
 # terminal to-do-task_list application
 # 1. menu, the user can choose to access 1. main tasks, 2.subtasks, 3. all tasks
-# 2. the user can add tasks and remove a task when done
-
-
-
-# to continue: had a problem with the priority of the task when it gets created in All task page
-# step taken:
-# a class method created: set_priority(input)
-# task_operator(list, priority=None) <-- set priority to optional in the task_operator function
-
+# 2. the user can add tasks, remove a task, and mark a task as completed.
 
 import time
 from task import Task
@@ -33,7 +25,7 @@ def display_commands():
     print("\ntype \"add (task_name)\" to add a task")
     print("type \"remove (task_name)\" to remove a task")
     print("type \"done (task_name)\" to complete a task")
-    print("type \"set (priority)\" to change the task's priority")
+    print("type \"set (task_name) (priority)\" to change the task's priority")
     print("type \"list\" to display the tasks list")
     print("type \"back\" to go back")
     print("type \"help\" to re-display all the commands")
@@ -81,6 +73,27 @@ def task_operator(task_list, priority=None):
                 print(f"\nThe task {task_set_complete.name} has been set as completed!")
                 print(task_set_complete.toString())
 
+        elif parts[0].lower() == "set" and len(parts) > 1:
+                if " " in parts[1]:
+                    task_name, new_priority = parts[1].split(" ", 1)
+                    task_to_update = None
+
+                    for task in task_list:
+                        if task.name == task_name:
+                            task_to_update = task
+
+                    if task_to_update is None:
+                        print("\nTask not found")
+                    else:
+                        if new_priority.lower() in ["main", "sub"]:
+                            change_category(task_list,
+                                            main_task_list if new_priority.lower() == "main" else sub_task_list,
+                                            task_to_update)
+                        else:
+                            print("\nInvalid Input. Use \"Main\" or \"Sub\".")
+                else:
+                    print("\nInvalid Input. Expected \"set (task_name) (new_priority)\"")
+
         elif task_command.lower() == "list":
             display_task(task_list)
 
@@ -93,11 +106,14 @@ def task_operator(task_list, priority=None):
             break
 
         else:
-            print("\nInvalid Input\n")
+            print("\nInvalid Input")
 
 
-
-
+def change_category(init_list, target_list, task):
+    init_list.remove(task)
+    task.set_priority("Main Task") if target_list == main_task_list else task.set_priority("Sub-Task")
+    target_list.append(task)
+    print(f"\nThe {task.name} has been moved to {task.priority} category!")
 
 ## main program
 main_task_list = []

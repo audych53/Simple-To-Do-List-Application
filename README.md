@@ -8,7 +8,7 @@ The project's code consists of the following files:
 - task.py: Contains the Task class, which serves as a blueprint for creating tasks.
 
 ## Features
-- [x] *add* new tasks (can be done in either main category or sub-category page)
+- [x] *add* new tasks
 - [x] *set* a task's status as completed
 - [x] *view* all tasks created
 - [x] *delete* a task
